@@ -1,0 +1,5 @@
+url=https://gitlab.freedesktop.org/upower/upower/-/tags
+
+port_getver() {	
+    curl -Lsk $url | grep -Eo "[0-9a-z.]+tar.[gbx]z2?" | sed "s|.tar.[bg]z||"
+}

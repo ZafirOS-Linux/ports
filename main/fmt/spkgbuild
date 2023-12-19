@@ -1,0 +1,27 @@
+# description	    : An open-source formatting library
+# homegape	    : https://fmt.dev/latest/index.html
+# depends	    : cmake ninja
+
+name=fmt
+version=10.1.1
+release=1
+source="https://github.com/fmtlib/$name/archive/$version/$name-$version.tar.gz
+	sphinx.patch
+	pip.patch"
+
+build() {
+	
+	patch -Np1 -d $name-$version -i $SRC/sphinx.patch
+	patch -Np1 -d $name-$version -i $SRC/pip.patch
+
+	cmake -S $name-$version -B build -G Ninja \
+		-D CMAKE_INSTALL_PREFIX=/usr \
+		-D CMAKE_INSTALL_LIBDIR=lib \
+		-D CMAKE_BUILD_TYPE=Release \
+		-D CMAKE_CXX_FLAGS_RELEASE="$CXXFLAGS" \
+		-D BUILD_SHARED_LIBS=ON \
+		-D CMAKE_POSITION_INDEPENDENT_CODE=ON \
+		-Wno-dev
+	cmake --build build
+	DESTDIR=$PKG cmake --install build
+}

@@ -1,0 +1,18 @@
+# description	: Feature-rich ncurses-based music player
+# depends	: libcue ncurses alsa-lib ffmpeg faad2 libmad libmpcdec flac
+
+name=cmus
+version=2.10.0
+release=2
+source="https://github.com/cmus/cmus/archive/v$version/$name-$version.tar.gz
+	ffmpeg6.patch"
+
+build() {
+	cd $name-$version
+
+	patch -Np1 -i $SRC/ffmpeg6.patch
+
+	./configure prefix=/usr
+	make
+	make DESTDIR=$PKG install
+}

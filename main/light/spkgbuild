@@ -1,0 +1,34 @@
+# description	: Program to easily change brightness on backlight-controllers
+# depends	: help2man
+
+name=light
+version=1.2.2
+release=3
+source="$name-$version.tar.gz::https://github.com/haikarainen/light/archive/v$version.tar.gz
+	run.lightd
+	finish.lightd
+	rc.$name"
+
+build() {
+	cd $name-$version
+
+	# fix build with gcc-10
+	export CFLAGS="$CFLAGS -fcommon"
+
+	./autogen.sh
+	./configure --prefix=/usr
+	make
+	make DESTDIR=$PKG install
+
+	_runit() {
+	# runit service
+	    install -Dm755 $SRC/run.lightd $PKG/etc/sv/lightd/run
+	    install -Dm755 $SRC/finish.lightd $PKG/etc/sv/lightd/finish
+	    ln -s /run/runit/supervise.lightd $PKG/etc/sv/lightd/supervise
+	}
+	_sysv() {
+	# rc service
+	    install -Dm755 $SRC/rc.$name $PKG/etc/rc.d/$name
+	}
+	zfr isinstalled runit && _runit || _sysv
+}

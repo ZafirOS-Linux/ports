@@ -1,0 +1,20 @@
+# description	: Color Picker
+# depends	: cmake ninja lua expat boost gettext ragel gtk3
+
+name=gpick
+version=0.2.6
+release=1
+source="https://github.com/thezbyg/gpick/archive/$name-$version.tar.gz"
+
+build() {
+	cmake -S $name-$name-$version -B build -G Ninja \
+	        -DCMAKE_INSTALL_PREFIX=/usr \
+	        -DCMAKE_INSTALL_LIBDIR=lib \
+		-DCMAKE_INSTALL_LIBEXECDIR=lib \
+		-DCMAKE_BUILD_TYPE=Release \
+		-DCMAKE_C_FLAGS_RELEASE="$CFLAGS" \
+		-DCMAKE_CXX_FLAGS_RELEASE="$CXXFLAGS" \
+		-Wno-dev 
+	cmake --build build
+	DESTDIR=$PKG cmake --install build
+}

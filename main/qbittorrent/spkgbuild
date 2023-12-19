@@ -1,0 +1,22 @@
+# description	: An advanced BitTorrent client programmed in C++, based on Qt toolkit and libtorrent
+# depends	: cmake libtorrent-rasterbar boost qt6-base qt6-svg qt6-tools python3 ninja
+
+name=qbittorrent
+version=4.6.2
+release=1
+source="https://downloads.sourceforge.net/qbittorrent/$name-$version.tar.xz"
+
+build() {
+
+	cmake -S $name-$version -B build -G Ninja \
+        	-DCMAKE_INSTALL_PREFIX=/usr \
+	        -DCMAKE_INSTALL_LIBDIR=lib \
+		-DCMAKE_INSTALL_LIBEXECDIR=lib \
+		-DCMAKE_BUILD_TYPE=Release \
+		-DCMAKE_C_FLAGS_RELEASE="$CFLAGS" \
+		-DCMAKE_CXX_FLAGS_RELEASE="$CXXFLAGS" \
+		-DQT6=ON \
+		-Wno-dev 
+	cmake --build build
+	DESTDIR=$PKG cmake --install build
+}

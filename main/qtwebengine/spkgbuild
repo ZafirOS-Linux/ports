@@ -1,0 +1,65 @@
+# description	: QtWebEngine integrates chromium's web capabilities into Qt
+# depends	: ffmpeg libwebp libxcomposite libxcursor libxslt libxtst ninja nodejs nss opus qt5
+# optional	: krb5 jsoncpp snappy
+
+name=qtwebengine
+version=5.15.17
+release=1
+source="https://anduin.linuxfromzfr.org/BLFS/qtwebengine/qtwebengine-$version.tar.xz
+	qtwebengine-$version-build_fixes-1.patch
+	qtwebengine-$version-ffmpeg5_fixes-1.patch"
+
+build() {
+	cd $name-$version
+
+	# Fix several issues and to force it to use python3
+	patch -Np1 -i $SRC/qtwebengine-$version-build_fixes-1.patch
+
+	# Fix build with ffmpeg-5
+	patch -Np1 -i $SRC/qtwebengine-$version-ffmpeg5_fixes-1.patch
+
+	# Fix an issue in shipped ffmpeg causing it fail to build with Binutils 2.41 or later 
+	sed 's/(uint8_t)\(([^)]*)\|shift\)/\1 \& 0x1F/' \
+	    -i src/3rdparty/chromium/third_party/ffmpeg/libavcodec/x86/mathops.h
+
+	# Create the required .git directories
+	mkdir -pv .git src/3rdparty/chromium/.git
+	
+	# change to current version of QT5
+	sed -e '/^MODULE_VERSION/s/5.*/5.15.11/' -i .qmake.conf
+
+	# Local headers
+	find -type f -name "*.pr[io]" | xargs sed -i -e 's|INCLUDEPATH += |&$$QTWEBENGINE_ROOT/include |'
+	
+	# Fix the build tools so they can be run with Python-3.11+
+	sed -e 's/\^(?i)/(?i)^/' -i src/3rdparty/chromium/tools/metrics/ukm/ukm_model.py 
+	sed -e "s/'rU'/'r'/" -i src/3rdparty/chromium/tools/grit/grit/util.py
+	
+	# Remove an obsolete instance of and a reference to the six module
+	sed -e /six.move/d \
+	    -i src/3rdparty/chromium/third_party/protobuf/python/google/protobuf/internal/python_message.py 
+	rm -r src/3rdparty/chromium/tools/grit/third_party/six	
+
+	# There is also a workaround needed for ICU-74+
+	sed -e 's/^#define BA_LB_COUNT.*$/#define BA_LB_COUNT 40/' \
+	    -i src/3rdparty/chromium/third_party/blink/renderer/platform/text/text_break_iterator.cc
+	
+	# Fix build with libxml2
+	sed -e 's/xmlError/const xmlError/' \
+		-i src/3rdparty/chromium/third_party/blink/renderer/core/xml/xslt_processor.h \
+		-i src/3rdparty/chromium/third_party/blink/renderer/core/xml/xslt_processor_libxslt.cc
+
+	# Fix NINJAJOBS environment variable
+	sed -i 's/NINJAJOBS/NINJA_JOBS/' src/core/gn_run.pro
+
+	# Install qtwebengine
+	mkdir build
+	cd    build
+	qmake .. -- -proprietary-codecs -system-ffmpeg -system-opus -system-webp -webengine-icu
+	make
+	make INSTALL_ROOT=$PKG install
+
+	# Remove references to the build directory from installed library dependency (prl)
+	find $PKG/usr/ -name \*.prl \
+	   -exec sed -i -e '/^QMAKE_PRL_BUILD_DIR/d' {} \;
+}

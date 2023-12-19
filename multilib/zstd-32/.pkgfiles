@@ -1,0 +1,14 @@
+zstd-32-1.5.5-2
+drwxr-xr-x root/root    usr/
+drwxr-xr-x root/root    usr/lib32/
+drwxr-xr-x root/root    usr/lib32/cmake/
+drwxr-xr-x root/root    usr/lib32/cmake/zstd/
+-rw-r--r-- root/root    usr/lib32/cmake/zstd/zstdConfig.cmake
+-rw-r--r-- root/root    usr/lib32/cmake/zstd/zstdConfigVersion.cmake
+-rw-r--r-- root/root    usr/lib32/cmake/zstd/zstdTargets-none.cmake
+-rw-r--r-- root/root    usr/lib32/cmake/zstd/zstdTargets.cmake
+lrwxrwxrwx root/root    usr/lib32/libzstd.so -> libzstd.so.1
+lrwxrwxrwx root/root    usr/lib32/libzstd.so.1 -> libzstd.so.1.5.5
+-rwxr-xr-x root/root    usr/lib32/libzstd.so.1.5.5
+drwxr-xr-x root/root    usr/lib32/pkgconfig/
+-rw-r--r-- root/root    usr/lib32/pkgconfig/libzstd.pc

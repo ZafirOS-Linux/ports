@@ -1,0 +1,16 @@
+# description	: A Python 3.x interface to libcurl
+# homepage	: http://pycurl.sourceforge.net/
+# depends	: curl 
+
+name=python3-pycurl
+version=7.45.2
+_ver=7_45_2
+release=2
+source="$name-$version.tar.gz::https://github.com/pycurl/pycurl/archive/REL_${_ver}/python-pycurl-$version.tar.gz"
+
+build() {
+	cd pycurl-REL_${_ver}
+	CFLAGS="$CFLAGS" CXXFLAGS="$CXXFLAGS" \
+	python3 setup.py --with-openssl install --root=$PKG
+	rm -rf $PKG/usr/share/doc
+}

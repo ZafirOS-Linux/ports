@@ -1,0 +1,18 @@
+# description	: Keyboard configuration database for the X Window System
+# depends	: xorgproto libx11 xkbcomp
+
+name=xkeyboard-config
+version=2.40
+release=1
+source="http://xorg.freedesktop.org/archive/individual/data/xkeyboard-config/xkeyboard-config-$version.tar.xz"
+
+build() {
+
+        venom-meson $name-$version build \
+		-Dcompat-rules=true \
+		-Dxorg-rules-symlinks=true
+        meson compile -C build
+        DESTDIR=$PKG meson install --no-rebuild -C build
+	# Xkeyboard-config 2.39 break qemu that relies to find this
+	ln -sfv ara $PKG/usr/share/X11/xkb/symbols/ar
+}

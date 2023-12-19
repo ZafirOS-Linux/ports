@@ -1,0 +1,33 @@
+# description	: C runtime (crt) for mingw-w64 toolchain
+# homepage	: https://mingw-w64.org/
+# depends	: mingw-w64-binutils mingw-w64-headers
+
+name=mingw-w64-crt
+version=11.0.1
+release=2
+source="https://sourceforge.net/projects/mingw-w64/files/mingw-w64/mingw-w64-release/mingw-w64-v$version.tar.bz2 "
+options=options="!strip !buildflags staticlibs !emptydirs"
+
+bsdtar() {
+	tar $@
+}
+
+
+build() {
+
+  for T in i686-w64-mingw32 x86_64-w64-mingw32; do
+	mkdir build-$T
+	cd build-$T
+
+	[ "$T" = "i686-w64-mingw32" ] && \
+	OPTS="--disable-lib64 --enable-lib32" || \
+	OPTS="--disable-lib32 --enable-lib64"
+
+	../mingw-w64-v$version/mingw-w64-crt/configure --prefix=/usr/$T --host=$T \
+		 --enable-wildcard $OPTS CC=${T}-gcc
+		make
+		make DESTDIR=$PKG install
+		cd ..
+  done
+}
+

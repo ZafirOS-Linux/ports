@@ -1,0 +1,15 @@
+# description	: Set of plug-ins that aren't up to par compared to the rest
+# depends	: gst-plugins-base libdvdread libdvdnav llvm soundtouch meson
+
+name=gst-plugins-bad
+version=1.22.7
+release=1
+source="https://gstreamer.freedesktop.org/src/gst-plugins-bad/$name-$version.tar.xz"
+
+build() {
+	venom-meson $name-$version build \
+		-Ddoc=disabled \
+		-Dpackage-name="GStreamer Bad Plugins $version (Venom Linux)" 
+	meson compile -C build
+	DESTDIR=$PKG meson install --no-rebuild -C build
+}

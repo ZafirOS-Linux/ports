@@ -1,0 +1,34 @@
+#!/bin/sh
+#
+# /etc/rc.d/cups: start/stop CUPS Printserver
+#
+
+. /etc/rc.subr
+
+NAME="CUPS Printserver"
+PROG=/usr/sbin/cupsd
+PID=/run/cups/cupsd.pid
+
+case $1 in
+	start)
+		msg "Starting $NAME..."
+		start_daemon -p $PID $PROG
+		;;
+	stop)
+		msg "Stopping $NAME..."
+		stop_daemon -p $PID $PROG
+		;;
+	restart)
+		$0 stop
+		sleep 1
+		$0 start
+		;;
+	status)
+		status_daemon $PROG
+		;;
+	*)
+		echo "usage: $0 [start|stop|restart|status]"
+		;;
+esac
+
+# End of file

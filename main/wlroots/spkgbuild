@@ -1,0 +1,18 @@
+# description	: Modular Wayland compositor library 
+# depends	: libinput libxkbcommon pixman xcb-util-image xcb-util-wm xcb-util-renderutil meson ninja wayland-protocols xcb-util-errors mesa seatd hwdata
+
+name=wlroots
+version=0.16.2
+release=2
+source="https://gitlab.freedesktop.org/wlroots/wlroots/-/archive/$version/wlroots-$version.tar.gz"
+
+build() {
+
+	venom-meson $name-$version build \
+	-Dwerror=false \
+	-Dexamples=false \
+	-Dxwayland=$(zfr isinstalled xwayland && echo enabled || echo disabled) \
+	-Dbackends=drm,libinput,x11
+	meson compile -C build
+	DESTDIR=$PKG meson install --no-rebuild -C build
+}

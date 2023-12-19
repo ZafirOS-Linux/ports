@@ -1,0 +1,24 @@
+# description	: Cross-platform community-driven port of Keepass password manager 
+# homepage	: https://keepassxc.org/
+# depends	: argon2 botan curl hicolor-icon-theme libgcrypt libsodium libxtst qrencode qt5 quazip
+		 
+name=keepassxc
+version=2.7.1
+release=2
+source="https://github.com/keepassxreboot/${name}/releases/download/${version}/${name}-${version}-src.tar.xz"
+
+build() {
+	cmake -S $name-$version -B build \
+	        -DCMAKE_INSTALL_PREFIX=/usr \
+	        -DCMAKE_INSTALL_LIBDIR=lib \
+		-DCMAKE_INSTALL_LIBEXECDIR=lib \
+		-DCMAKE_BUILD_TYPE=Release \
+		-DCMAKE_C_FLAGS_RELEASE="$CFLAGS" \
+		-DCMAKE_CXX_FLAGS_RELEASE="$CXXFLAGS" \
+        	-DWITH_XC_UPDATECHECK=OFF \
+		-DWITH_XC_DOCS=OFF \
+		-DWITH_XC_YUBIKEY=OFF \
+		-Wno-dev 
+	cmake --build build
+	DESTDIR=$PKG cmake --install build
+}

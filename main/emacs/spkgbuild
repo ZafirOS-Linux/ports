@@ -1,0 +1,23 @@
+# description	: The extensible, customizable, self-documenting real-time display editor
+# depends	: giflib libxml2 gnutls imagemagick libxpm
+
+name=emacs
+version=29.1
+release=1
+source="ftp://ftp.gnu.org/gnu/emacs/$name-$version.tar.xz"
+
+build() {
+	cd $name-$version
+
+	IMAGEMAGICK_CFLAGS=-I/usr/include/ImageMagick-7 \
+	IMAGEMAGICK_LIBS="-lMagickCore-7.Q16HDRI -lMagick++-7.Q16HDRI -lMagickWand-7.Q16HDRI" \
+	./configure --prefix=/usr \
+		    --libexecdir=/usr/lib \
+		    --with-tiff=no \
+		    --localstatedir=/var	
+	make
+	make DESTDIR=$PKG install
+
+	rm -r $PKG/usr/lib/systemd
+
+}

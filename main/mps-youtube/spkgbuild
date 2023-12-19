@@ -1,0 +1,12 @@
+# description	: Terminal based YouTube jukebox with playlist management
+# depends	: python3-setuptools python3-pafy
+
+name=mps-youtube
+version=2.10.5
+release=1
+source="$name-$version.tar.gz::https://github.com/mps-youtube/mps-youtube/archive/v$version.tar.gz"
+
+build() {
+	cd yewtube-$version
+	python3 setup.py install --root="$PKG" --optimize=1
+}

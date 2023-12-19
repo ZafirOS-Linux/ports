@@ -1,0 +1,20 @@
+# description	    : A built-package format for Python
+# homepage	    : https://pypi.python.org/pypi/wheel
+# depends	    : python3-setuptools
+
+name=python3-wheel
+version=0.42.0
+release=1
+source="https://files.pythonhosted.org/packages/source/w/wheel/${name#*-}-$version.tar.gz"
+
+bsdtar() { tar $@;}
+
+build() {
+
+	cd ${name#*-}-$version
+
+	export PYTHONHASHSEED=0
+
+	/usr/bin/python3 setup.py build
+	/usr/bin/python3 setup.py install --prefix=/usr --root=$PKG --optimize=1 --skip-build
+}

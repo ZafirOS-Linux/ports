@@ -1,0 +1,18 @@
+# description	: A free, open source, and cross-platform media player
+# depends	: mesa meson lcms2 ffmpeg libass libarchive luajit 
+# depends	: libcdio-paranoia libxpresent libxscrnsaver libplacebo
+
+name=mpv
+version=0.37.0
+release=1
+source="https://github.com/mpv-player/mpv/archive/v$version/$name-$version.tar.gz"
+
+build() {
+	venom-meson $name-$version build \
+		-D libmpv=true \
+		-D libarchive=enabled \
+		-D cdda=enabled \
+		-D lua=luajit 
+	meson compile -C build
+	DESTDIR=$PKG meson install --no-rebuild -C build
+}

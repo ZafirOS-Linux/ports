@@ -1,0 +1,18 @@
+# description	: Lightweight and flexible command-line JSON processor
+# depends	: oniguruma autoconf automake bison flex python3
+
+name=jq
+version=1.7.1
+release=1
+source="https://github.com/stedolan/jq/releases/download/jq-$version/$name-$version.tar.gz"
+
+build() {
+	cd $name-$version
+
+	autoreconf -i
+	./configure --prefix=/usr --disable-docs
+	make
+	make DESTDIR=$PKG install
+
+	rm -r $PKG/usr/share/doc
+}

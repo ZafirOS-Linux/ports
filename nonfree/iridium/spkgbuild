@@ -1,0 +1,17 @@
+# description	: An attempt at creating a safer, faster, and more stable browser (Stable Channel)
+# depends	: alsa-lib gconf gtk3 libxtst nss libarchive pipewire
+
+name=iridium
+version=2023.10.118
+release=1
+options="!strip"
+source="$name-$version.rpm::https://downloads.iridiumbrowser.de/epel8/$name-browser-$version-$release.el8.x86_64.rpm"
+
+build() {
+	sed -i 's,lib64,lib,g' usr/bin/iridium-browser
+	sed -i 's,usr/bin/sh,bin/sh,' usr/bin/iridium-browser
+	cp -R * $PKG
+	rm -fr $PKG/usr/lib
+	mv $PKG/usr/lib64 $PKG/usr/lib
+	rm -r $PKG/usr/share/doc $PKG/usr/share/licenses
+}

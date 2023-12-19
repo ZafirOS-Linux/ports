@@ -1,0 +1,16 @@
+# description	: Audio compression format designed especially for speech
+# depends	: libogg
+
+name=speex
+version=1.2.1
+release=1
+source="$name-$version.tar.gz::https://github.com/xiph/speex/archive/Speex-1.2.1.tar.gz"
+
+build() {
+	cd $name-Speex-$version
+	./autogen.sh
+	./configure --prefix=/usr --disable-static
+	make
+	make DESTDIR=$PKG install
+
+}

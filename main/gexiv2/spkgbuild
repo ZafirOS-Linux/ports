@@ -1,0 +1,13 @@
+# description	: GObject-based wrapper around the Exiv2 library
+# depends	: exiv2 vala meson python3-gobject3
+
+name=gexiv2
+version=0.14.2
+release=1
+source="https://ftp.gnome.org/pub/gnome/sources/gexiv2/${version%.*}/gexiv2-$version.tar.xz"
+
+build() {
+	venom-meson $name-$version build
+	meson compile -C build
+	DESTDIR=$PKG meson install --no-rebuild -C build
+}

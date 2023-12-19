@@ -1,0 +1,22 @@
+# description	: Basic, good-looking task manager for WMs
+# depends	: gtk3 imlib2 startup-notification cmake ninja libxdamage libxcomposite librsvg
+
+name=tint2
+version=17.0.2
+release=2
+source="https://gitlab.com/o9000/tint2/-/archive/v$version/tint2-v$version.tar.gz"
+
+build() {
+	cmake -S tint2-v$version -B build -G Ninja \
+	        -DCMAKE_INSTALL_PREFIX=/usr \
+	        -DCMAKE_INSTALL_LIBDIR=lib \
+		-DCMAKE_INSTALL_LIBEXECDIR=lib \
+		-DCMAKE_BUILD_TYPE=Release \
+		-DCMAKE_C_FLAGS_RELEASE="$CFLAGS" \
+		-DCMAKE_CXX_FLAGS_RELEASE="$CXXFLAGS" \
+		-DENABLE_TINT2CONF=1 \
+		-Wno-dev 
+	cmake --build build
+	DESTDIR="$PKG" cmake --install build
+
+}

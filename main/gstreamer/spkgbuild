@@ -1,0 +1,15 @@
+# description	: Streaming media framework that enables applications to share a common set of plugins
+# depends	: glib gobject-introspection meson
+
+name=gstreamer
+version=1.22.7
+release=1
+source="http://gstreamer.freedesktop.org/src/$name/$name-$version.tar.xz"
+
+build() {
+	venom-meson $name-$version build \
+		-Dgst_debug=false \
+		-Dpackage-name="GStreamer $version (Venom Linux)"
+	meson compile -C build
+	DESTDIR=$PKG meson install --no-rebuild -C build
+}

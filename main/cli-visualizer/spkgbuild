@@ -1,0 +1,18 @@
+# description : cli-visualizer
+# depends	: fftw ncurses
+
+name=cli-visualizer
+version=1.8
+release=8
+source="$name-$version.tar.gz::https://github.com/dpayne/$name/archive/v$version.tar.gz"
+
+build() {
+	cmake -S $name-$version -B build \
+	        -DCMAKE_INSTALL_PREFIX=/usr \
+		-DCMAKE_BUILD_TYPE=Release \
+		-DCMAKE_C_FLAGS_RELEASE="$CFLAGS" \
+		-DCMAKE_CXX_FLAGS_RELEASE="$CXXFLAGS" \
+		-Wno-dev
+	cmake --build build
+	DESTDIR=$PKG cmake --install build
+}

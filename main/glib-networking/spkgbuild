@@ -1,0 +1,14 @@
+# description	: Network related gio modules for GLib
+# depends	: glib gnutls gsettings-desktop-schemas ca-certificates p11-kit meson
+
+name=glib-networking
+version=2.78.0
+release=2
+source="https://ftp.gnome.org/pub/gnome/sources/$name/${version%.*}/$name-$version.tar.xz"
+
+build() {
+	venom-meson $name-$version build \
+		-Dlibproxy=disabled
+	meson compile -C build
+	DESTDIR=$PKG meson install --no-rebuild -C build
+}

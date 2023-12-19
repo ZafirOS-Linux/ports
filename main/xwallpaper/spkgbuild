@@ -1,0 +1,16 @@
+# description	: wallpaper setting utility for X
+# homepage	: https://github.com/stoeckmann/xwallpaper
+# depends	: xcb-util-image xcb-util pixman
+
+name=xwallpaper
+version=0.7.4
+release=1
+source="https://github.com/stoeckmann/$name/archive/v$version/$name-v$version.tar.gz"
+
+build() {
+	cd $name-$version
+	./autogen.sh
+	./configure --prefix=/usr
+	make
+	make DESTDIR=$PKG install
+}

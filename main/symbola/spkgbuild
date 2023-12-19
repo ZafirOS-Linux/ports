@@ -1,0 +1,15 @@
+# description	: Unicode font for Latin, IPA Extensions, Greek, Cyrillic and many Symbol Blocks
+# homepage	: https://dn-works.com/ufas/
+# depends	: fontconfig poppler
+
+name=symbola
+version=14.00
+release=1
+source="https://dn-works.com/wp-content/uploads/2021/UFAS121921/Symbola.pdf"
+
+build() {
+
+	pdfdetach -savefile Symbola.otf Symbola.pdf
+	install -d $PKG/user/share/fonts/OTF/symbola
+	install -Dm644 Symbola.otf $PKG/user/share/fonts/OTF/symbola/
+}

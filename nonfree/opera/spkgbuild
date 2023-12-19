@@ -1,0 +1,24 @@
+# description	: A fast and secure web browser
+# depends	: curl desktop-file-utils gtk3 hicolor-icon-theme nss shared-mime-info alsa-lib cups
+
+name=opera
+version=105.0.4970.34
+release=1
+ffmpeg_ver=0.82.0
+source="$name-$version.deb::https://download3.operacdn.com/pub/opera/desktop/${version}/linux/${name}-stable_${version}_amd64.deb
+https://github.com/nwjs-ffmpeg-prebuilt/nwjs-ffmpeg-prebuilt/releases/download/$ffmpeg_ver/$ffmpeg_ver-linux-x64.zip"
+
+build() {
+	bsdtar -xf ${name}-${version}.deb
+	tar xf data.tar.xz -C $PKG
+
+	rm -r $PKG/usr/share/lintian $PKG/usr/share/menu
+
+	mv $PKG/usr/lib/*-linux-gnu/opera $PKG/usr/lib
+	rm -r $PKG/usr/lib/*-linux-gnu
+
+	ln -sf /usr/lib/opera/opera $PKG/usr/bin/opera
+
+	# support propietary codecs
+	install -Dm644 $SRC/libffmpeg.so -t $PKG/usr/lib/opera/
+}

@@ -1,0 +1,25 @@
+# description	: A proprietary music streaming service
+# depends	: alsa-lib gtk2 glib nss libxtst libx11 openssl gconf
+# depends	: libcurl-gnutls libarchive cups libayatana-appindicator
+
+name=spotify
+version=1.2.26.1187
+commit=g36b715a1
+release=1
+source="$name-$version.deb::http://repository.spotify.com/pool/non-free/s/spotify-client/spotify-client_$version.${commit}_amd64.deb
+	spotify"
+
+build() {
+	bsdtar -xf ${name}-${version}.deb
+	tar -xzf data.tar.gz -C $PKG
+
+	zfr isinstalled wayland-protocols && sed 's/Exec=spotify %U/Exec=dbus-launch spotify %U/' $PKG/usr/share/spotify/spotify.desktop
+	install -Dm644 $PKG/usr/share/spotify/spotify.desktop $PKG/usr/share/applications/spotify.desktop
+	install -Dm644 $PKG/usr/share/spotify/icons/spotify-linux-512.png $PKG/usr/share/pixmaps/spotify-client.png
+
+	for size in 22 24 32 48 64 128 256 512; do
+		install -D $PKG/usr/share/spotify/icons/spotify-linux-$size.png \
+			$PKG/usr/share/icons/hicolor/${size}x${size}/apps/spotify.png
+	done
+	
+}

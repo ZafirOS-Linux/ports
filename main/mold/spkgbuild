@@ -1,0 +1,24 @@
+# description	: A Modern Linker
+# homepage	: https://github.com/rui314/mold
+# depends	: cmake ninja zlib mimalloc tbb
+
+name=mold
+version=2.4.0
+release=1
+source="$name-$version.tar.gz::https://github.com/rui314/mold/archive/v$version.tar.gz"
+
+build() {
+
+	zfr isinstalled clang export CC=clang export CXX=clang++
+	export SYSTEM_MIMALLOC=1 
+	export SYSTEM_TBB=1 
+	export LTO=1 
+
+	cmake -S $name-$version -B build -G Ninja \
+		-DCMAKE_INSTALL_PREFIX=/usr \
+		-DCMAKE_INSTALL_LIBDIR=/usr/lib \
+	        -DCMAKE_INSTALL_LIBEXECDIR=/usr/lib 
+	cmake --build   build
+	DESTDIR=$PKG cmake --install build
+}
+

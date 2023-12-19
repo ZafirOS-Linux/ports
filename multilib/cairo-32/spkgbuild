@@ -1,0 +1,26 @@
+# description	: 2D graphics library with support for multiple output devices
+# depends	: cairo libpng-32 pixman-32 fontconfig-32 glib-32 libxcb-32 libxrender-32 libx11-32 libxext-32
+
+name=cairo-32
+version=1.18.0
+release=1
+source="https://gitlab.freedesktop.org/cairo/cairo/-/archive/$version/${name%-*}-$version.tar.bz2"
+
+build() {
+	export CC="gcc -m32"
+	export CXX="g++ -m32"
+	export PKG_CONFIG_LIBDIR="/usr/lib32/pkgconfig"
+
+	venom-meson ${name%-*}-$version build \
+		--libdir=lib32 \
+		--buildtype=plain \
+		-Ddwrite=disabled \
+		-Dspectre=disabled \
+		-Dsymbol-lookup=disabled \
+		-Dtests=disabled
+	meson compile -C build
+	DESTDIR=$PKG meson install --no-rebuild -C build
+
+	rm -r $PKG/usr/bin
+	rm -r $PKG/usr/include
+}

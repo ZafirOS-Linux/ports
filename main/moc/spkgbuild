@@ -1,0 +1,29 @@
+# description	: Music On Console - ncurses interface for playing audio files
+# homepage	: http://moc.daper.net/
+# depends	: curl libid3tag libmad libsndfile libtool ffmpeg
+
+name=moc
+version=2.5.2
+release=4
+source="http://ftp.daper.net/pub/soft/moc/stable/$name-$version.tar.bz2
+	moc-ffmpeg6.patch
+	moc-https.patch"
+
+build() {
+	cd $name-$version
+	
+	patch -Np1 -i $SRC/moc-ffmpeg6.patch # Fix build with ffmpeg 6
+	patch -Np1 -i $SRC/moc-https.patch   # Allow https for urls https://moc.daper.net/node/1872
+
+	export PKG_CONFIG_PATH='/usr/lib/ffmpeg4/pkgconfig'
+	./configure --prefix=/usr --without-rcc \
+	    --with-oss --with-alsa --with-jack --with-aac --with-mp3 \
+	    --with-musepack --with-vorbis --with-flac --with-wavpack \
+	    --with-sndfile --with-modplug --with-ffmpeg --with-speex \
+	    --with-samplerate --with-curl  --disable-cache --disable-debug
+	
+	make
+	make DESTDIR=$PKG install
+	install -D -m 0644 -t $PKG/usr/share/moc/ config.example keymap.example 
+	rm -rf $PKG/usr/share/doc
+}

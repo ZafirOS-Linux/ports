@@ -1,0 +1,35 @@
+#!/bin/sh
+#
+# /etc/rc.d/tlpd: start/stop TLP Service
+#
+
+. /etc/rc.subr
+
+NAME="TLP daemon"
+PROG=/usr/bin/tlp
+OPTS="init"
+
+case $1 in
+	start)
+		msg "Starting $NAME..."
+		start_daemon $PROG $OPTS
+		;;
+	stop)
+		msg "Stopping $NAME..."
+		stop_daemon $PROG $OPTS
+		;;
+	restart)
+		$0 stop
+		sleep 1
+		$0 start
+		;;
+	status)
+		status_daemon $PROG
+		tlp-stat -s
+		;;
+	*)
+		echo "usage: $0 [start|stop|restart|status]"
+		;;
+esac
+
+# End of file

@@ -1,0 +1,31 @@
+# description	: Utility to control/monitor storage systems using the Self-Monitoring, Analysis and Reporting Technology System
+
+name=smartmontools
+version=7.4
+release=2
+source="https://sourceforge.net/projects/$name/files/$name/$version/$name-$version.tar.gz
+	run.smartd
+	finish.smartd
+	rc.smartd"
+
+build() {
+	cd $name-$version
+
+  	./configure --prefix=/usr           \
+	            --sysconfdir=/etc       \
+	            --with-initscriptdir=no
+	make
+	make DESTDIR=$PKG install
+
+	_runit() {
+	# runit service
+	    install -Dm755 $SRC/run.smartd $PKG/etc/sv/smartd/run
+	    install -Dm755 $SRC/finish.smartd $PKG/etc/sv/smartd/finish
+	    ln -s /run/runit/supervise.smartd $PKG/etc/sv/smartd/supervise
+	}
+	_sysv() {
+	# rc service
+	    install -Dm755 $SRC/rc.smartd $PKG/etc/rc.d/smartd
+	}
+	zfr isinstalled runit && _runit || _sysv
+}

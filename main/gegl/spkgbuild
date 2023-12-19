@@ -1,0 +1,14 @@
+# description	: GEneric Graphics Library, a graph based image processing format
+# depends	: babl json-glib poppler-glib meson graphviz
+
+name=gegl
+version=0.4.46
+release=1
+source="https://download.gimp.org/pub/gegl/${version%.*}/$name-$version.tar.xz"
+
+build() {
+	cd $name-$version
+	venom-meson -Ddocs=false build
+	meson compile -C build
+	DESTDIR=$PKG meson install --no-rebuild -C build
+}

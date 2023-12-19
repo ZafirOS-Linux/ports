@@ -1,0 +1,26 @@
+# description	: utilities and libraries for handling ELF files
+# depends	: curl zlib xz bzip2
+
+name=elfutils
+version=0.190
+release=2
+source="https://sourceware.org/ftp/elfutils/$version/elfutils-$version.tar.bz2"
+
+build() {
+	cd $name-$version
+
+	# https://sourceware.org/PR23914
+	sed -i 's:-Werror::' */Makefile.in
+
+	./configure \
+		--prefix=/usr \
+		--sysconfdir=/etc \
+		--program-prefix="eu-" \
+		--disable-debuginfod \
+		--disable-libdebuginfod \
+		--disable-nls \
+		--enable-deterministic-archives \
+		--without-zstd
+	make
+	make DESTDIR=$PKG install
+}

@@ -1,0 +1,47 @@
+# description	: Implementation of Windows DLL's and core
+# homepage	: https://dl.winehq.org/wine
+# depends	: alsa-lib-32 attr-32 dbus-32 dxvk-bin e2fsprogs-32 fontconfig-32 freeglut-32 glu-32
+# depends	: gnutls-32 gst-plugins-bad-32 gst-plugins-good-32 gst-plugins-ugly-32 keyutils-32
+# depends	: krb5-32 lcms2-32 libgcrypt-32 libtiff-32 libunwind-32 libva-32 libxcomposite-32
+# depends	: libxcursor-32 libxinerama-32 libxrandr-32 libxslt-32 libxxf86dga-32 lz4-32
+# depends	: mingw-w64-gcc mpg123-32 nasm-32 opencl-headers pulseaudio-32 v4l-utils-32 vkd3d-32
+# depends	: x265-32 zstd-32
+
+name=wine
+version=8.21
+release=1
+source="https://dl.winehq.org/wine/source/${version%%.*}.x/$name-$version.tar.xz"
+
+build() {
+	cd $name-$version
+
+	mkdir build64 build32
+	cd build64
+
+	../configure \
+		--prefix=/usr \
+		--libdir=/usr/lib \
+		--with-x \
+		--enable-win64
+	make
+	make DESTDIR=$PKG install
+
+	cd ../build32
+
+	export PKG_CONFIG_LIBDIR="/usr/lib32/pkgconfig"
+
+	../configure \
+		--prefix=/usr \
+		--libdir=/usr/lib32 \
+		--with-x \
+		--with-wine64=../build64
+	make
+	make DESTDIR=$PKG install
+
+	# Exclude libraries for revdep
+	install -d $PKG/etc/revdep.d
+	echo "/usr/lib/wine/x86_64-unix/" > $PKG/etc/revdep.d/$name.conf
+	echo "/usr/lib32/wine/i386-unix/" >> $PKG/etc/revdep.d/$name.conf
+
+	rm -r $PKG/usr/share/man/??.UTF-8
+}

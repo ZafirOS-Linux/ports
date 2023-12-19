@@ -1,0 +1,19 @@
+# description	    : A low-level library for installing from a Python wheel distribution
+# homepage	    : https://github.com/pypa/installer
+# depends	    : python3-pip
+
+name=python3-installer
+version=0.7.0
+release=1
+source="$name-$version.tar.gz::https://pypi.org/packages/source/i/installer/installer-$version.tar.gz"
+
+build() {
+  cd installer-$version
+
+  _pyver=$(/usr/bin/python3 -c 'import sys; print("%s.%s" % sys.version_info[:2])')
+
+  /usr/bin/pip3 install --isolate --root=$PKG --ignore-installed --no-deps installer  
+
+  rm -rf $PKG/usr/lib/python$_pyver/site-packages/installer-$version.dist-info/REQUESTED
+  rm -rf $PKG/usr/lib/python$_pyver/site-packages/installer-$version.dist-info/INSTALLER
+}

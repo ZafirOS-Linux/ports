@@ -1,0 +1,15 @@
+# description	: Cantarell font family
+# depends	: meson appstream-glib
+
+name=ttf-cantarell
+_name=cantarell-fonts
+version=0.303.1
+release=1
+source="https://ftp.gnome.org/pub/gnome/sources/$_name/${version%.?}/$_name-$version.tar.xz"
+
+build() {
+	cd $_name-$version
+	venom-meson -Duseprebuilt=true build
+	meson compile -C build
+	DESTDIR=$PKG meson install --no-rebuild -C build
+}

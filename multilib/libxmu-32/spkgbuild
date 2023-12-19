@@ -1,0 +1,26 @@
+# description	: X11 miscellaneous micro-utility library
+# depends	: libxmu libxt-32 libxext-32
+
+name=libxmu-32
+version=1.1.4
+release=1
+source="${name%-*}-$version.tar.xz::http://ftp.x.org/pub/individual/lib/libXmu-$version.tar.xz"
+
+build() {
+	cd libXmu-$version
+
+	export CC="gcc -m32"
+	export CXX="g++ -m32"
+	export PKG_CONFIG_LIBDIR="/usr/lib32/pkgconfig"
+
+	./configure \
+		--prefix=/usr \
+                --sysconfdir=/etc \
+		--libdir=/usr/lib32 \
+                --localstatedir=/var \
+                --disable-static
+	make
+	make DESTDIR=$PWD/DESTDIR install
+	mkdir -p $PKG/usr/lib32
+	cp -Rv DESTDIR/usr/lib32/* $PKG/usr/lib32
+}

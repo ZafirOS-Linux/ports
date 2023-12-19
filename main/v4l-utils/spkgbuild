@@ -1,0 +1,15 @@
+# description	: Provides a series of utilities for media devices
+# depends	: alsa-lib glu libjpeg-turbo qt5 llvm
+
+name=v4l-utils
+version=1.26.1
+release=1
+source="https://www.linuxtv.org/downloads/v4l-utils/$name-$version.tar.xz"
+
+build() {
+
+	venom-meson $name-$version build \
+		    -Dgconv=disabled
+	meson compile -C build
+	DESTDIR=$PKG meson install --no-rebuild -C build
+}

@@ -1,0 +1,22 @@
+# description	: The GL Vendor-Neutral Dispatch library
+# depends	: libxext libx11
+
+name=libglvnd
+version=1.7.0
+release=1
+source="https://github.com/NVIDIA/libglvnd/archive/v$version/$name-v$version.tar.gz
+	0001-glx-Add-another-fallback-library-name.patch"
+
+build() {
+	# https://src.fedoraproject.org/rpms/libglvnd
+	patch -Np1 -d $name-$version -i $SRC/0001-glx-Add-another-fallback-library-name.patch
+
+	venom-meson $name-$version build \
+		-D x11=enabled \
+		-D glx=enabled \
+		-D gles1=false \
+		-D egl=true \
+		-D tls=false
+	meson compile -C build
+	DESTDIR=$PKG meson install --no-rebuild -C build
+}

@@ -1,0 +1,44 @@
+# description	: gcc for mingw-w64 toolchain
+# homepage	: https://gcc.gnu.org/
+# depends	: mingw-w64-crt mingw-w64-winpthreads
+# depends	: libgmp libisl libmpc libmpfr zlib
+
+name=mingw-w64-gcc
+version=13.2.0
+release=1
+source="http://gcc.gnu.org/pub/gcc/releases/gcc-$version/gcc-$version.tar.xz"
+options="!strip staticlibs !emptydirs !buildflags"
+
+bsdtar() {
+	tar $@
+}
+
+build() {
+
+	export CFLAGS="$CFLAGS -O2 -Wno-error=format-security"
+	export CXXFLAGS="$CXXFLAGS -O2 -Wno-error=format-security"
+
+  for T in i686-w64-mingw32 x86_64-w64-mingw32; do
+	mkdir base-gcc-$T
+	cd base-gcc-$T
+
+	../gcc-$version/configure \
+		--prefix=/usr \
+		--libexecdir=/usr/lib \
+		--target=${T} \
+		--enable-languages=c,lto,c++ \
+	        --enable-shared --enable-static \
+	        --enable-threads=posix --enable-fully-dynamic-string \
+	        --enable-libstdcxx-time=yes --enable-libstdcxx-filesystem-ts=yes \
+	        --with-system-zlib --enable-cloog-backend=isl \
+	        --enable-lto --enable-libgomp \
+	        --disable-multilib --enable-checking=release \
+	        --disable-sjlj-exceptions --with-dwarf2
+	make all
+	make DESTDIR=$PKG install
+	cd ..
+  done
+	# remove unnecessary files
+	rm -r $PKG/usr/share/man
+	rm -r $PKG/usr/share/info
+}

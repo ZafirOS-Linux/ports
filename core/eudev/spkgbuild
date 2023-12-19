@@ -1,0 +1,34 @@
+# description	: Programs for dynamic creation of device nodes
+# depends	: util-linux kmod
+
+name=eudev
+version=3.2.14
+release=1
+source="$name-$version.tar.gz::https://github.com/eudev-project/eudev/archive/v$version.tar.gz"
+
+build() {
+	cd $name-$version
+
+	zfr isinstalled libxslt && OPTS="--enable-manpages"
+
+	# remove an unneeded group 'sgx'
+	sed -i -e 's/GROUP="sgx", //' rules/50-udev-default.rules
+
+	autoreconf -f -i -s
+	./configure $OPTS \
+		--prefix=/usr \
+		--bindir=/sbin \
+		--sbindir=/sbin \
+		--libdir=/usr/lib \
+		--sysconfdir=/etc \
+		--libexecdir=/lib \
+		--with-rootprefix= \
+		--with-rootlibdir=/lib \
+		--disable-static 
+	make
+
+	mkdir -pv $PKG/lib/udev/rules.d
+	mkdir -pv $PKG/etc/udev/rules.d
+
+	make DESTDIR=$PKG install
+}

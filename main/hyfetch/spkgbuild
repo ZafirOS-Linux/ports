@@ -1,0 +1,12 @@
+# description	: A CLI system information tool written in BASH that supports displaying images with pride flags <3
+# depends	: bash
+
+name=hyfetch
+version=1.4.10
+release=1
+source="$name-$version.tar.gz::https://github.com/hykilpikonna/$name/archive/refs/tags/$version.tar.gz"
+
+build() {
+	cd $name-$version
+	make DESTDIR=$PKG install
+}

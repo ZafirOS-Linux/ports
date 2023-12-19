@@ -1,0 +1,19 @@
+# description	: Combined X.Org X11 Protocol headers
+# depends	: meson
+
+name=xorgproto
+version=2023.2
+release=1
+source="https://xorg.freedesktop.org/archive/individual/proto/$name-$version.tar.xz"
+
+build() {
+	cd $name-$version
+	venom-meson build
+	meson compile -C build
+	DESTDIR=$PKG meson install --no-rebuild -C build
+
+	# cleanup
+	rm $PKG/usr/include/X11/extensions/apple*
+	rm $PKG/usr/share/pkgconfig/apple*
+
+}

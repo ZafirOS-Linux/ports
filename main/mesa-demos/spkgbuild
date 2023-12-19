@@ -1,0 +1,20 @@
+# description	: Mesa demos and tools incl. glxinfo + glxgears
+# depends	: glew freeglut mesa freetype2 libdecor
+
+name=mesa-demos
+version=9.0.0
+release=1
+source="https://archive.mesa3d.org/demos/$name-$version.tar.xz"
+
+build() {
+	venom-meson $name-$version build \
+		-D osmesa=disabled \
+		-D wayland=$(zfr isinstalled wayland && echo enabled || echo disabled)
+	meson compile -C build
+	DESTDIR=$PKG meson install --no-rebuild -C build
+
+	install -d $PKG/usr/bin
+	install -m 0755 -t $PKG/usr/bin build/src/xdemos/glxgears
+	install -m 0755 -t $PKG/usr/bin build/src/xdemos/glxinfo
+
+}

@@ -1,0 +1,30 @@
+# description	: Modern toolset used for generating Makefiles
+# depends	: curl libarchive libuv
+
+name=cmake
+version=3.28.1
+release=1
+source="https://www.cmake.org/files/v${version%.*}/$name-$version.tar.gz"
+
+build() {
+	cd $name-$version
+
+	sed -i '/"lib64"/s/64//' Modules/GNUInstallDirs.cmake
+
+	sed -i Source/CMakeInstallDestinations.cmake \
+	    -e 's|share/cmake-${CMake_VERSION_MAJOR}.${CMake_VERSION_MINOR}|share/cmake|'
+
+	./bootstrap \
+		--prefix=/usr \
+		--datadir=/share/$name \
+		--no-system-jsoncpp  \
+		--no-system-cppdap   \
+		--no-system-librhash \
+		--system-libs \
+		-- -D Cmake_BUILD_LTO=ON \
+		-D BUILD_TESTING=OFF
+	make
+	make DESTDIR=$PKG install
+
+	rm -r $PKG/usr/doc
+}

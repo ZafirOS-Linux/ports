@@ -1,0 +1,38 @@
+# description	: Server and user space API to deal with multimedia
+# depends	: meson alsa-lib gstreamer ffmpeg dbus gst-plugins-base bluez sbc jack
+
+name=pipewire
+version=1.0.0
+release=1
+source="https://github.com/PipeWire/pipewire/archive/$version/$name-$version.tar.gz
+	venom-pipewire-launcher
+	pipewire.desktop"
+
+build() {
+
+	venom-meson $name-$version build \
+		-D systemd=disabled \
+		-D docs=disabled \
+	        -D vulkan=disabled \
+	        -D examples=disabled \
+		-D session-managers=[]
+	meson compile -C build
+	DESTDIR=$PKG meson install --no-rebuild -C build
+
+	# enable alsa by default
+	install -Dm644 /dev/null $PKG/usr/share/pipewire/media-session.d/with-alsa
+	mkdir -p $PKG/etc/alsa/conf.d
+	ln -st $PKG/etc/alsa/conf.d /usr/share/alsa/alsa.conf.d/99-pipewire-default.conf
+	ln -st $PKG/etc/alsa/conf.d /usr/share/alsa/alsa.conf.d/50-pipewire.conf
+
+	# install venom pipewire launcher
+	install -Dm755 $SRC/venom-pipewire-launcher $PKG/usr/bin/venom-pipewire-launcher
+
+	# install desktop file
+	install -Dm644 $SRC/pipewire.desktop -t $PKG/etc/xdg/autostart/
+	
+	# remove leftovers
+	rm -r $PKG/usr/share/locale
+
+}
+

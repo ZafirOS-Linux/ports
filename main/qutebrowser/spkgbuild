@@ -1,0 +1,16 @@
+# description	: A keyboard-driven, vim-like browser based on PyQt5
+# depends	: qt6-base python3-yaml python3-jinja2 python3-pygments python3-pyqt6 python3-pyqt6-webengine asciidoc
+
+name=qutebrowser
+version=3.1.0
+release=1
+source="https://github.com/qutebrowser/qutebrowser/releases/download/v$version/qutebrowser-$version.tar.gz"
+
+# fix bsdtar extract error
+#  'Pathname can't be converted from UTF-8 to current locale.'
+ export LC_ALL=en_US.utf-8
+
+build() {
+	cd $name-$version
+	make -f misc/Makefile DESTDIR=$PKG PREFIX=/usr install
+}

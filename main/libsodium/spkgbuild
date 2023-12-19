@@ -1,0 +1,14 @@
+# description	: P(ortable|ackageable) NaCl-based crypto library 
+# homepage	: https://github.com/jedisct1/libsodium
+
+name=libsodium
+version=1.0.19
+release=1
+source="https://download.libsodium.org/libsodium/releases/libsodium-$version.tar.gz"
+
+build() {
+	cd $name-stable
+	./configure --prefix=/usr
+	make
+	make DESTDIR=$PKG install
+}

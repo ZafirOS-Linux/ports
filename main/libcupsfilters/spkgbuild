@@ -1,0 +1,23 @@
+# description 	: Code of the filters of the former cups-filters package as library functions
+# homepage	: https://github.com/OpenPrinting/libcupsfilters
+# depends	: cups ghostscript lcms2 poppler qpdf
+
+name=libcupsfilters
+version=2.0.0
+release=2
+source="https://github.com/OpenPrinting/libcupsfilters/releases/download/$version/$name-$version.tar.xz"
+
+build() {
+	cd $name-$version
+
+	zfr isinstalled dbus || OPTDBUS=' --disable-dbus'
+	zfr isinstalled libexif || OPTEXIF=' --disable-exif'
+	zfr isinstalled mupdf || OPTMUP=' --disable-mutool'
+
+	./configure --prefix=/usr $OPTDBUS $OPTEXIF $OPTMUP
+
+	make
+	make DESTDIR=$PKG install
+
+	rm -r $PKG/usr/share/doc
+}

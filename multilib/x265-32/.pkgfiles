@@ -1,0 +1,10 @@
+x265-32-3.5-2
+drwxr-xr-x root/root    usr/
+drwxr-xr-x root/root    usr/lib32/
+-rw-r--r-- root/root    usr/lib32/libhdr10plus.a
+-rwxr-xr-x root/root    usr/lib32/libhdr10plus.so
+-rw-r--r-- root/root    usr/lib32/libx265.a
+lrwxrwxrwx root/root    usr/lib32/libx265.so -> libx265.so.199
+-rwxr-xr-x root/root    usr/lib32/libx265.so.199
+drwxr-xr-x root/root    usr/lib32/pkgconfig/
+-rw-r--r-- root/root    usr/lib32/pkgconfig/x265.pc

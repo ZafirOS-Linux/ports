@@ -1,0 +1,20 @@
+# description	: Utility that does structural, content-preserving transformations on PDF files 
+# depends	: gnutls zlib libjpeg-turbo openssl cmake ninja
+
+name=qpdf
+version=11.6.4
+release=1
+source="http://downloads.sourceforge.net/project/$name/$name/$version/$name-$version.tar.gz"
+
+build() {
+	cmake -S $name-$version -B build -G Ninja \
+	        -DCMAKE_INSTALL_PREFIX=/usr \
+	        -DCMAKE_INSTALL_LIBDIR=lib \
+		-DCMAKE_INSTALL_LIBEXECDIR=lib \
+		-DCMAKE_BUILD_TYPE=Release \
+		-DCMAKE_C_FLAGS_RELEASE="$CFLAGS" \
+		-DCMAKE_CXX_FLAGS_RELEASE="$CXXFLAGS" \
+		-Wno-dev 
+	cmake --build build
+	DESTDIR=$PKG cmake --install build
+}

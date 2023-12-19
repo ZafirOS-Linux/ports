@@ -1,0 +1,21 @@
+# description	: Fast and lightweight IDE
+# homepage	: https://www.geany.org
+# depends	: gtk3 hicolor-icon-theme desktop-file-utils intltool
+
+name=geany
+version=2.0
+release=2
+source="http://download.geany.org/$name-$version.tar.bz2"
+
+build() {
+	cd $name-$version
+
+	./configure \
+		--prefix=/usr \
+		--disable-api-docs \
+		--disable-html-docs \
+		--disable-pdf-docs \
+		--disable-nls
+	make
+	make DESTDIR=$PKG install
+}

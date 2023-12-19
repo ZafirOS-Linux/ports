@@ -1,0 +1,16 @@
+# description	: Control your EWMH compliant window manager from command line
+# homepage	: http://tripie.sweb.cz/utils/wmctrl/
+# depends	: glib libxmu
+
+name=wmctrl
+version=1.07
+release=1
+source="https://sites.google.com/site/tstyblo/wmctrl/wmctrl-$version.tar.gz"
+
+build() {
+	cd $name-$version
+
+	./configure --bindir=/usr/bin --mandir=/usr/share/man
+	make
+	make DESTDIR=$PKG install
+}

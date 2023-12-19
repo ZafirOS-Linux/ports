@@ -1,0 +1,14 @@
+# description	: D-Bus proxy
+# depends	: glib
+
+name=xdg-dbus-proxy
+version=0.1.5
+release=2
+source="https://github.com/flatpak/xdg-dbus-proxy/releases/download/$version/xdg-dbus-proxy-$version.tar.xz"
+
+build() {
+	venom-meson $name-$version build \
+		-D man=disabled
+	meson compile -C build
+	DESTDIR=$PKG meson install --no-rebuild -C build
+}

@@ -1,0 +1,20 @@
+# description	: Cross-platform video editor
+# homepage	: https://www.shotcut.org
+# depends	: cmake ffmpeg mlt qt6-base qt6-tools qt6-websockets qt6-multimedia qt6-translations ninja
+
+name=shotcut
+version=23.12.15
+release=1
+source="$name-$version.tar.gz::https://github.com/mltframework/shotcut/archive/v${version}.tar.gz"
+
+build() {
+	cmake -S $name-$version -B build -G Ninja \
+        	-D CMAKE_BUILD_TYPE=Release \
+	        -D CMAKE_INSTALL_PREFIX:PATH=/usr \
+	        -D CMAKE_C_FLAGS_RELEASE="$CFLAGS -DNDEBUG" \
+	        -D CMAKE_CXX_FLAGS_RELEASE="$CXXFLAGS -DNDEBUG -DHOSTCUT_NOUPGRADE" \
+		-D SHOTCUT_VERSION=$version
+	cmake --build build --verbose
+	ninja -C build translations
+	DESTDIR=$PKG cmake --install build
+}

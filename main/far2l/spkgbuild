@@ -1,0 +1,22 @@
+# description	: Linux port of FAR Manager v2 (http://farmanager.com/)
+# homepage	: https://github.com/elfmz/far2l
+# depends	: cmake ninja gawk m4 wxgtk3 xerces-c spdlog uchardet libnfs libssh2 openssl samba neon libarchive pcre2
+
+name=far2l
+version=2.5.3
+release=1
+source="$name-$version.tar.gz::https://github.com/elfmz/far2l/archive/v_$version.tar.gz"
+
+build() {
+	cmake -S $name-v_$version -B build -G Ninja \
+		-DCMAKE_INSTALL_PREFIX=/usr \
+		-DCMAKE_INSTALL_LIBDIR=lib \
+		-DCMAKE_INSTALL_LIBEXECDIR=lib \
+		-DCMAKE_BUILD_TYPE=Release \
+		-DCMAKE_C_FLAGS_RELEASE="$CFLAGS" \
+		-DCMAKE_CXX_FLAGS_RELEASE="$CXXFLAGS" \
+		-DUSEWX=yes \
+		-Wno-dev 
+	cmake --build  build
+	DESTDIR=$PKG cmake --install build
+}

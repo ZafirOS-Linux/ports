@@ -1,0 +1,14 @@
+# description	: snownews 
+# depends	: ncurses libxml2 curl gettext openssl lynx
+
+name=snownews
+version=1.11
+release=2
+source="https://sourceforge.net/projects/$name/files/$name-$version.tar.gz"
+
+build() {
+    cd $name-$version
+	./configure --prefix=/usr
+	make
+	make PREFIX=/usr DESTDIR=$PKG install
+}

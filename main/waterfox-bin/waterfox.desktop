@@ -1,0 +1,12 @@
+[Desktop Entry]
+Name=Waterfox
+Name[en_US]=waterfox
+GenericName=Web Browser
+GenericName[en_US]=Web Browser
+Comment=Free web browser fork of Mozilla
+Exec=waterfox %U
+Terminal=false
+Type=Application
+Icon=waterfox
+Categories=Network;
+

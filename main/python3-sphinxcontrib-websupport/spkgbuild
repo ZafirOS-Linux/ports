@@ -1,0 +1,15 @@
+# description	    : Python API to easily integrate Sphinx documentation into web applications.
+# homepage	    : https://github.com/sphinx-doc/sphinxcontrib-websupport/
+# depends	    : python3-build python3-installer python3-flit-core
+
+name=python3-sphinxcontrib-websupport
+version=1.2.6
+release=1
+source="$name-$version.tar.gz::https://github.com/sphinx-doc/${name#*-}/archive/$version/${name#*-}-$version.tar.gz"
+
+build() {
+	cd ${name#python3-}-$version
+
+	python3 -m build --skip-dependency-check --no-isolation
+	python3 -m installer --destdir=$PKG dist/*whl
+}

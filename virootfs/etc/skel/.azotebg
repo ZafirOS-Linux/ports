@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+pkill swaybg
+swaybg -i "/usr/share/backgrounds/nwg-shell/nwg-chain.jpg" -m fill &

@@ -1,0 +1,12 @@
+diff --git a/zfr b/zfr
+index ad411be..b949ae6 100755
+--- a/zfr
++++ b/zfr
+@@ -246,6 +246,7 @@ zfr_isorphan() {
+ }
+ 
+ zfr_sync() {	
++	echo ":: Please run 'portsync' to sync Official Venom Linux ports."
+ 	checktool httpup	
+ 	needroot "Updating ports"
+ 	

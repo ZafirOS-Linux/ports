@@ -1,0 +1,27 @@
+# description	: HTTP library with thread-safe connection pooling and file post support
+# depends	: python3-pip
+
+name=python3-urllib3
+_name=${name#*-}
+_n=${_name%${_name#?}}
+version=2.1.0
+release=1
+source="$name-$version.tar.gz::https://files.pythonhosted.org/packages/source/$_n/${name#*-}/${name#*-}-$version.tar.gz"
+
+build() {
+	cd ${name#*-}-$version
+	if [ -f pyproject.toml -o -d urllib3.egg.info ]
+	    then
+		if  [ -d urllib3 ]
+		    then
+			/usr/bin/pip3 install --isolate --root=$PKG \
+			--no-warn-script-location --ignore-installed --no-deps ${name#*3-}
+		    else
+			/usr/bin/pip3 install --isolate --root=$PKG \
+			--no-warn-script-location --ignore-installed --no-deps .
+		    fi
+	    else
+		python3 setup.py build
+		python3 setup.py install --prefix=/usr --root=$PKG --optimize=1
+	fi
+}

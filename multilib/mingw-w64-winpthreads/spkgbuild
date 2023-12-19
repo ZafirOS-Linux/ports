@@ -1,0 +1,33 @@
+# description	: MinGW-w64 winpthreads library
+# homepage	: https://mingw-w64.org/
+# depends	: mingw-w64-crt
+
+name=mingw-w64-winpthreads
+version=11.0.0
+release=1
+source="https://sourceforge.net/projects/mingw-w64/files/mingw-w64/mingw-w64-release/mingw-w64-v$version.tar.bz2"
+options="!strip !buildflags staticlibs !emptydirs"
+
+bsdtar() {
+	tar $@
+}
+
+build() {
+	# build scripts rewrite -Wl args and break this
+	#export LDFLAGS="${LDFLAGS} -z pack-relative-relocs"
+
+  for T in x86_64-w64-mingw32 i686-w64-mingw32; do
+	mkdir -p build-${T} 
+	cd build-${T}
+	$SRC/mingw-w64-v${version}/mingw-w64-libraries/winpthreads/configure --prefix=/usr/${T} \
+          --host=${T} --enable-static --enable-shared
+	make
+	make DESTDIR=$PKG install
+
+	rm $PKG/usr/$T/include/pthread_unistd.h
+	rm $PKG/usr/$T/include/pthread_time.h
+	rm $PKG/usr/$T/include/pthread_signal.h
+
+	${T}-strip --strip-unneeded $PKG/usr/$T/bin/*.dll
+  done
+}

@@ -1,0 +1,23 @@
+# description	: Library for encoding video streams into the H.265/HEVC format
+# depends	: cmake ninja nasm
+
+name=x265
+version=3.5
+release=1
+source="$name-$version.tar.gz::https://bitbucket.org/multicoreware/${name}_git/downloads/${name}_$version.tar.gz"
+
+build() {
+	cmake -S ${name}_${version}/source -B build -G Ninja \
+		-DHIGH_BIT_DEPTH=ON \
+		-DCMAKE_INSTALL_PREFIX=/usr \
+		-DCMAKE_INSTALL_LIBDIR=lib \
+		-DCMAKE_INSTALL_LIBEXECDIR=lib \
+		-DCMAKE_BUILD_TYPE=Release \
+		-DCMAKE_C_FLAGS_RELEASE="$CFLAGS" \
+		-DCMAKE_CXX_FLAGS_RELEASE="$CXXFLAGS" \
+		-Wno-dev 
+	cmake --build build
+	DESTDIR=$PKG cmake --install build
+
+	rm $PKG/usr/lib/libx265.a
+}

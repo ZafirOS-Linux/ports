@@ -1,0 +1,26 @@
+# description	: Contains libraries and utilities used for parsing XML files
+# depends	: libxml2 icu-32 xz-32 zlib-32
+
+name=libxml2-32
+version=2.12.3
+release=1
+source="https://download.gnome.org/sources/${name%-*}/${version%.*}/${name%-*}-$version.tar.xz"
+
+build() {
+	cd ${name%-*}-$version
+
+	export CC="gcc -m32"
+	export CXX="g++ -m32"
+	export PKG_CONFIG_LIBDIR="/usr/lib32/pkgconfig"
+
+	./configure --prefix=/usr \
+		    --libdir=/usr/lib32 \
+		    --disable-static \
+		    --with-icu \
+		    --with-history \
+		    --without-python
+	make
+	make DESTDIR=$PKG install
+
+	rm -fr $PKG/usr/share $PKG/usr/bin $PKG/usr/include
+}

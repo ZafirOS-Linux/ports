@@ -1,0 +1,13 @@
+# description	: Patched font Fira (Fura) Code from the nerd-fonts library 
+# homepage	: https://github.com/ryanoasis/nerd-fonts
+# depends	: fontconfig
+
+name=ttf-nerd-fira-code
+version=3.1.1
+release=1
+source="$name-$version.zip::https://github.com/ryanoasis/nerd-fonts/releases/download/v$version/FiraCode.zip"
+
+build() {
+  find . -iname "*.otf" -not -iname "*Windows Compatible.otf" -execdir install -Dm644 {} "$PKG/usr/share/fonts/OTF/{}" \;
+  find . -iname "*.ttf" -not -iname "*Windows Compatible.ttf" -execdir install -Dm644 {} "$PKG/usr/share/fonts/TTF/{}" \;
+}

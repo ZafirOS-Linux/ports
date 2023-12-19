@@ -1,0 +1,24 @@
+# description	: Qt implementation of the DBusMenu specification that exposes menus via DBus
+# depends	: cmake ninja qt5
+
+name=libdbusmenu-qt
+version=0.9.3+16.04.20160218
+release=1
+source="$name-$version.tar.gz::https://launchpad.net/ubuntu/+archive/primary/+files/${name}_${version}.orig.tar.gz"
+
+build() {
+	cmake -S $name-$version -B build -G Ninja \
+	        -DCMAKE_INSTALL_PREFIX=/usr \
+	        -DCMAKE_INSTALL_LIBDIR=lib \
+		-DCMAKE_INSTALL_LIBEXECDIR=lib \
+		-DCMAKE_BUILD_TYPE=Release \
+		-DCMAKE_C_FLAGS_RELEASE="$CFLAGS" \
+		-DCMAKE_CXX_FLAGS_RELEASE="$CXXFLAGS" \
+		-DWITH_DOC=OFF \
+		-Wno-dev 
+	cmake --build build
+	DESTDIR=$PKG cmake --install build
+
+}
+
+

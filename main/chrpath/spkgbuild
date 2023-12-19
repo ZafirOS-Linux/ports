@@ -1,0 +1,16 @@
+# description	: Chrpath modify the dynamic library load path (rpath and runpath) of compiled programs and libraries
+# homepage	: https://codeberg.org/pere/chrpath
+
+name=chrpath
+version=0.17
+release=1
+source="$name-$version.tar.gz::https://codeberg.org/pere/chrpath/archive/release-$version.tar.gz"
+
+build() {
+	cd $name
+	sh bootstrap
+	./configure --prefix=/usr
+	make
+	make DESTDIR=$PKG install
+	rm -r $PKG/usr/doc
+}

@@ -1,0 +1,14 @@
+# description	: PulseAudio Volume Control
+# depends	: gtkmm3 libsigc++ libcanberra pulseaudio json-glib
+
+name=pavucontrol
+version=5.0
+_commit=eba9ca6898c4883b88f80dbb83c5002fd19492b8
+release=2
+source="$name-$version-$_commit.tar.gz::https://github.com/pulseaudio/pavucontrol/archive/${_commit}.tar.gz"
+
+build() {
+	venom-meson $name-$_commit build
+	meson compile -C build
+	meson install -C build --destdir $PKG
+}

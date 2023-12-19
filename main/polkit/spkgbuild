@@ -1,0 +1,26 @@
+# description	    : Toolkit for defining and handling authorizations
+# homepage	    : https://freedesktop.org/software/polkit
+# depends	    : glib duktape linux-pam gobject-introspection intltool
+
+name=polkit
+version=123
+release=2
+source="https://gitlab.freedesktop.org/polkit/polkit/-/archive/$version/polkit-$version.tar.bz2"
+
+build() {
+	export XML_CATALOG_FILES=/etc/xml/catalog
+
+  	venom-meson $name-$version build \
+		-Dsystemdsystemunitdir=/trash \
+		-Dsession_tracking="ConsoleKit" \
+		-Dman=false \
+		-Dtests=false
+	meson compile -C build
+	DESTDIR=$PKG meson install --no-rebuild -C build
+
+	chown polkitd $PKG/etc/polkit-1/rules.d
+	chown polkitd $PKG/usr/share/polkit-1/rules.d
+	chmod 700 $PKG/etc/polkit-1/rules.d
+	chmod 700 $PKG/usr/share/polkit-1/rules.d
+
+}

@@ -1,0 +1,34 @@
+# description	: GNU binutils for mingw-w64 toolchain
+# homepage	: https://www.gnu.org/software/binutils/
+
+name=mingw-w64-binutils
+version=2.40
+release=1
+source="http://ftpmirror.gnu.org/gnu/binutils/binutils-$version.tar.xz"
+options="!libtool !emptydirs"
+
+build() {
+	for T in i686-w64-mingw32 x86_64-w64-mingw32; do
+		mkdir build-$T
+		cd build-$T
+		../binutils-$version/configure \
+			--prefix=/usr \
+			--target=$T \
+			--infodir=/usr/share/info/${T} \
+		        --enable-lto --enable-plugins \
+		        --enable-deterministic-archives \
+		        --disable-multilib --disable-nls \
+		        --disable-werror		
+		make
+		make DESTDIR=$PKG install
+		cd ..
+	done
+	
+	# delete bfd-plugins directory, so it does not conflict with host toolchain
+#	rm -rf $PKG/usr/lib/bfd-plugins
+	rm $PKG/usr/lib/bfd-plugins/libdep.so
+
+	# quite redundant given this is just regular binutils docs
+	rm -rf $PKG/usr/share/info
+	rm -rf $PKG/usr/share/man
+}

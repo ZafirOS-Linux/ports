@@ -1,0 +1,28 @@
+# description	: GTK3 settings editor adapted to work w/ wlroots-based compositors
+# homepage	: https://github.com/nwg-piotr/nwg-look
+# depends	: gtk3 glib cairo xcur2png
+ 
+name=nwg-look
+version=0.2.5
+release=1
+source="$name-$version.tar.gz::https://github.com/nwg-piotr/nwg-look/archive/v$version.tar.gz"
+
+build() {
+	cd $name-$version
+	export CGO_LDFLAGS="${LDFLAGS}"
+	export CGO_CFLAGS="${CFLAGS}"
+	export CGO_CPPFLAGS="${CPPFLAGS}"
+	export CGO_CXXFLAGS="${CXXFLAGS}"
+	export GOFLAGS="-buildmode=pie -trimpath -mod=readonly -modcacherw -ldflags=-linkmode=external"
+	export GOPATH=$SRC/go
+	export PATH=$PATH:$GOPATH/bin
+
+	go build -v -o $name *.go
+	
+	install -d $PKG/usr/share/$name
+	install -Dm644 -t $PKG/usr/share/$name stuff/main.glade
+	install -Dm644 -t $PKG/usr/share/$name/langs langs/*
+	install -Dm644 -t $PKG/usr/share/applications stuff/nwg-look.desktop
+	install -Dm644 -t $PKG/usr/share/pixmaps stuff/nwg-look.svg
+	install -Dm755 -t $PKG/usr/bin $name
+}

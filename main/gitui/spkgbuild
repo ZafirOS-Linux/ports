@@ -1,0 +1,18 @@
+# description	: Blazing fast terminal-ui for git written in rust
+# homepage	: https://github.com/Extrawurst/gitui
+# depends	: rust
+
+name=gitui
+version=0.24.3
+release=1
+source="https://github.com/extrawurst/$name/archive/v$version/$name-v$version.tar.gz"
+
+_cargo_opts="--frozen --no-default-features --features regex-onig"
+
+build() {
+	export CARGO_HOME="$SOURCE_DIR/cargo"
+	cd $name-$version
+	cargo fetch --locked
+	cargo build $_cargo_opts --release
+	install -Dt $PKG/usr/bin target/release/$name
+}

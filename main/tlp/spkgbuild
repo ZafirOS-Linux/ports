@@ -1,0 +1,27 @@
+# description	: a power manager
+# depends	: perl iw hdparm git util-linux usbutils pciutils ethtool 
+
+name=tlp
+version=1.6.1
+release=2
+source="https://github.com/linrunner/TLP/archive/$version/$name-$version.tar.gz
+	rc.tlpd
+	run.tlpd
+	finish.tlpd"
+
+build() {
+	cd TLP-$version
+	make DESTDIR=$PKG install
+
+	_runit() {
+	# runit service
+	    install -Dm755 $SRC/run.tlpd $PKG/etc/sv/tlpd/run
+	    install -Dm755 $SRC/finish.tlpd $PKG/etc/sv/tlpd/finish
+	    ln -s /run/runit/supervise.tlpd $PKG/etc/sv/tlpd/supervise
+	}
+	_sysv() {
+	# rc service
+	    install -Dm755 $SRC/rc.tlpd $PKG/etc/rc.d/tlpd
+	}
+	zfr isinstalled runit && _runit || _sysv
+}

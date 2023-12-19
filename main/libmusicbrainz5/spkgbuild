@@ -1,0 +1,24 @@
+# description	: Library That Provides Access to the MusicBrainz Server
+# depends	: cmake ninja libxml2 neon
+
+name=libmusicbrainz5
+version=5.1.0
+release=1
+source="https://github.com/metabrainz/libmusicbrainz/releases/download/release-$version/libmusicbrainz-$version.tar.gz
+	16.patch"
+
+build() {
+	patch -d libmusicbrainz-$version -Np1 -i $SRC/16.patch
+
+	cmake -S libmusicbrainz-$version -B build -G Ninja \
+	        -DCMAKE_INSTALL_PREFIX=/usr \
+		-DCMAKE_INSTALL_LIBDIR=lib \
+		-DCMAKE_INSTALL_LIBEXECDIR=lib \
+		-DCMAKE_BUILD_TYPE=Release \
+		-DCMAKE_C_FLAGS_RELEASE="$CFLAGS" \
+		-DCMAKE_CXX_FLAGS_RELEASE="$CXXFLAGS" \
+		-Wno-dev
+	cmake --build build
+	DESTDIR=$PKG cmake --install build
+}
+

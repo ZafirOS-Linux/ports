@@ -1,0 +1,45 @@
+# description	: Virtualization for Linux on x86 hardware containing virtualization extensions (Intel VT or AMD-V)
+# homepage	: https://www.qemu.org
+# depends	: alsa-lib sdl2 glib python3 coreutils pixman libslirp libx11 orc spice usbredir virglrenderer
+
+name=qemu
+version=8.1.3
+release=1
+source="http://download.qemu.org/$name-$version.tar.xz
+	CVE-2021-20255.patch"
+
+build() {
+	cd $name-$version
+
+	patch -Np1 -i $SRC/CVE-2021-20255.patch
+
+	./configure \
+		--prefix=/usr \
+		--sysconfdir=/etc \
+		--disable-docs \
+		--libexecdir=/usr/lib/$name \
+		--disable-gtk \
+		--localstatedir=/var \
+		--python=/usr/bin/python3 \
+		--enable-slirp \
+		--enable-spice \
+		--enable-usb-redir \
+		--enable-vhost-net \
+		--enable-virglrenderer \
+                --enable-modules \
+                --enable-sdl \
+                --enable-tpm \
+                --smbd=/usr/bin/smbd \
+                --with-coroutine=ucontext
+
+	make
+	make DESTDIR=$PKG install
+
+	#cp -r $SRC/man $PKG/usr/share
+
+	install -d $PKG/etc/udev/rules.d/
+	echo 'KERNEL=="kvm", NAME="kvm", OWNER="root", GROUP="kvm", MODE="0660"' > \
+		$PKG/etc/udev/rules.d/60-kvm.rules
+}
+
+

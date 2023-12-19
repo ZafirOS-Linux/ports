@@ -1,0 +1,40 @@
+# description	: Management tools and libraries relating to cryptography
+# homepage	: https://www.openssl.org
+
+name=openssl
+version=3.2.0
+release=1
+source="https://openssl.org/source/$name-$version.tar.gz
+	CVE-2023-5678"
+
+build() {
+	cd $name-$version
+
+	patch -Np1 -i $SRC/CVE-2023-5678
+
+	./config \
+		--prefix=/usr \
+		--libdir=lib \
+		--openssldir=/etc/ssl \
+		enable-ec_nistp_64_gcc_128 \
+		enable-camellia \
+		enable-seed \
+		enable-rfc3779 \
+		enable-ktls \
+		enable-argon2 \
+		no-mdc2 \
+		no-ec2m \
+		no-sm2 \
+		no-sm4 \
+		shared \
+		threads \
+		zlib
+
+	sed -i "s|-O3|$CFLAGS|" Makefile
+
+	make depend
+	make
+	make MANSUFFIX=ssl DESTDIR=$PKG install_sw install_ssldirs install_man_docs
+
+	find $PKG -name "*fips*" -delete
+}

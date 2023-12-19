@@ -1,0 +1,16 @@
+# description	: A set of plug-ins considered by the GStreamer developers to have good quality and correct functionality, but distributing them might pose problems
+# depends	: gst-plugins-base lame liba52 libdvdread x264 meson
+
+name=gst-plugins-ugly
+version=1.22.7
+release=1
+source="https://gstreamer.freedesktop.org/src/$name/$name-$version.tar.xz"
+
+build() {
+	venom-meson $name-$version build \
+		-Ddebug=false \
+		-Ddoc=disabled \
+		-Dpackage-name="GStreamer Ugly Plugins $version (Venom Linux)"
+	meson compile -C build
+	DESTDIR=$PKG meson install --no-rebuild -C build
+}

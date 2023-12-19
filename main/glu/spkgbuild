@@ -1,0 +1,13 @@
+# description	: Mesa OpenGL Utility library
+# depends	: mesa
+
+name=glu
+version=9.0.3
+release=1
+source="ftp://ftp.freedesktop.org/pub/mesa/glu/$name-$version.tar.xz"
+
+build() {
+	venom-meson $name-$version build
+	meson compile -C build
+	DESTDIR=$PKG meson install --no-rebuild -C build
+}

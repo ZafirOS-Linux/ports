@@ -1,0 +1,18 @@
+openssl-32-3.2.0-1
+drwxr-xr-x root/root    usr/
+drwxr-xr-x root/root    usr/lib32/
+drwxr-xr-x root/root    usr/lib32/engines-3/
+-rwxr-xr-x root/root    usr/lib32/engines-3/afalg.so
+-rwxr-xr-x root/root    usr/lib32/engines-3/capi.so
+-rwxr-xr-x root/root    usr/lib32/engines-3/loader_attic.so
+-rwxr-xr-x root/root    usr/lib32/engines-3/padlock.so
+lrwxrwxrwx root/root    usr/lib32/libcrypto.so -> libcrypto.so.3
+-rwxr-xr-x root/root    usr/lib32/libcrypto.so.3
+lrwxrwxrwx root/root    usr/lib32/libssl.so -> libssl.so.3
+-rwxr-xr-x root/root    usr/lib32/libssl.so.3
+drwxr-xr-x root/root    usr/lib32/ossl-modules/
+-rwxr-xr-x root/root    usr/lib32/ossl-modules/legacy.so
+drwxr-xr-x root/root    usr/lib32/pkgconfig/
+-rw-r--r-- root/root    usr/lib32/pkgconfig/libcrypto.pc
+-rw-r--r-- root/root    usr/lib32/pkgconfig/libssl.pc
+-rw-r--r-- root/root    usr/lib32/pkgconfig/openssl.pc

@@ -1,0 +1,27 @@
+# description	: A toolkit for manipulation of graphic images 
+# depends	: perl libpng libtiff libxml2 python3 libjpeg-turbo
+
+name=netpbm
+version=11.4.5
+release=1
+source="https://github.com/ceamac/$name-make-dist/releases/download/v$version/$name-$version.tar.xz"
+
+build() {
+	cd $name-$version
+
+  cp config.mk.in  config.mk
+  echo 'CFLAGS_SHLIB = -fPIC' >> config.mk
+  echo 'TIFFLIB = libtiff.so' >> config.mk
+  echo 'JPEGLIB = libjpeg.so' >> config.mk
+  echo 'PNGLIB = libpng.so' >> config.mk
+  echo 'ZLIB = libz.so' >> config.mk
+
+  sed -i 's|misc|share/netpbm|' common.mk
+  sed -i 's|/link|/lib|' lib/Makefile
+  sed -i 's|install.manwebmain install.manweb install.man|install.man|' GNUmakefile
+
+  make
+  make pkgdir="${PKG}/usr" PKGMANDIR=share/man install-run install-dev
+  echo -e '#!/bin/sh\npamditherbw $@ | pamtopnm\n' > "${PKG}/usr/bin/pgmtopbm"
+
+}

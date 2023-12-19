@@ -1,0 +1,15 @@
+# description	: Next-Gen ls command 
+# homepage	: https://github.com/Peltoche/lsd
+# depends	: rust
+
+name=lsd
+version=1.0.0
+release=1
+source="$name-$version.tar.gz::https://github.com/lsd-rs/lsd/archive/v${version}.tar.gz"
+
+build() {
+	cd $name-$version
+	cargo build --release --locked 
+	cargo install --locked --path . --root=$PKG/usr
+	rm $PKG/usr/.crates*
+}

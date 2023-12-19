@@ -1,0 +1,18 @@
+libxslt-32-1.1.39-1
+drwxr-xr-x root/root    usr/
+drwxr-xr-x root/root    usr/lib32/
+drwxr-xr-x root/root    usr/lib32/cmake/
+drwxr-xr-x root/root    usr/lib32/cmake/libxslt/
+-rw-r--r-- root/root    usr/lib32/cmake/libxslt/FindGcrypt.cmake
+-rw-r--r-- root/root    usr/lib32/cmake/libxslt/libxslt-config.cmake
+lrwxrwxrwx root/root    usr/lib32/libexslt.so -> libexslt.so.0.8.21
+lrwxrwxrwx root/root    usr/lib32/libexslt.so.0 -> libexslt.so.0.8.21
+-rwxr-xr-x root/root    usr/lib32/libexslt.so.0.8.21
+drwxr-xr-x root/root    usr/lib32/libxslt-plugins/
+lrwxrwxrwx root/root    usr/lib32/libxslt.so -> libxslt.so.1.1.39
+lrwxrwxrwx root/root    usr/lib32/libxslt.so.1 -> libxslt.so.1.1.39
+-rwxr-xr-x root/root    usr/lib32/libxslt.so.1.1.39
+drwxr-xr-x root/root    usr/lib32/pkgconfig/
+-rw-r--r-- root/root    usr/lib32/pkgconfig/libexslt.pc
+-rw-r--r-- root/root    usr/lib32/pkgconfig/libxslt.pc
+-rw-r--r-- root/root    usr/lib32/xsltConf.sh

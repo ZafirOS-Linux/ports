@@ -1,0 +1,33 @@
+# description	: Outline and bitmap font editor
+# depends	: freetype2 glib libxml2 cairo gtk3 harfbuzz pango desktop-file-utils shared-mime-info libuninameslist libspiro
+
+name=fontforge
+version=20230101
+release=2
+source="https://github.com/fontforge/fontforge/releases/download/$version/fontforge-$version.tar.xz"
+
+build() {
+	cd $name-$version
+
+	# Fix a problem with old translations exposed by gettext-0.22
+
+	sed -i.orig 's/\(%[^%[:space:]]*\)hs/\1s/g' \
+		fontforgeexe/searchview.c po/de.po po/ca.po \
+		po/hr.po po/it.po po/pl.po po/uk.po po/en_GB.po \
+		po/fr.po po/vi.po po/ko.po po/ja.po
+
+	cmake -B build \
+	        -DCMAKE_INSTALL_PREFIX=/usr \
+	        -DCMAKE_INSTALL_LIBDIR=lib \
+		-DCMAKE_INSTALL_LIBEXECDIR=lib \
+		-DCMAKE_BUILD_TYPE=Release \
+		-DCMAKE_C_FLAGS_RELEASE="$CFLAGS" \
+		-DCMAKE_CXX_FLAGS_RELEASE="$CXXFLAGS" \
+		-DENABLE_MAINTAINER_TOOLS=TRUE \
+		-DENABLE_FONTFORGE_EXTRAS=TRUE \
+		-DUNIX=TRUE \
+		-Wno-dev
+	cmake --build build
+	DESTDIR=$PKG cmake --install build
+
+}

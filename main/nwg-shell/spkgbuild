@@ -1,0 +1,18 @@
+# description	: nwg-shell meta-package
+# homepage	: https://github.com/nwg-piotr/nwg-shell
+# depends	: azote foot gopsuinfo gnome-themes-extra grim imagemagick jq libappindicator light mousepad network-manager-applet 
+# depends	: nwg-displays nwg-dock nwg-drawer nwg-look nwg-menu nwg-panel nwg-shell-config nwg-shell-wallpapers 
+# depends	: papirus-icon-theme-dark papirus-icon-theme-light polkit-gnome swappy sway swayidle swaylock swaync ttf-dejavu 
+# depends	: wlsunset xdg-user-dirs xdg-utils xwayland wl-clipboard
+
+name=nwg-shell
+version=0.5.23
+release=1
+source="$name-$version.tar.gz::https://github.com/nwg-piotr/nwg-shell/releases/download/v$version/nwg-shell-v$version.tar.gz"
+
+build() {
+	cd $name-$version
+	python3 setup.py install --root=$PKG --optimize=1
+	install -D -t $PKG/usr/bin scripts/*
+	install -D -t $PKG/usr/share/backgrounds nwg-shell.jpg
+}

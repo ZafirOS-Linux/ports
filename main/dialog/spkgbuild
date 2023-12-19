@@ -1,0 +1,19 @@
+# description	: A tool to display dialog boxes from shell scripts
+# depends	: ncurses
+
+name=dialog
+version=1.3_20231002
+vrsn=$(echo $version | sed 's/_/-/')
+release=1
+source="https://invisible-mirror.net/archives/$name/$name-$vrsn.tgz"
+
+build () {
+	cd $name-$vrsn
+
+	./configure \
+		--prefix=/usr \
+		--with-ncursesw \
+		--with-libtool
+	make
+	make DESTDIR=$PKG install
+}

@@ -1,0 +1,39 @@
+# description	    : Wireless daemon for Linux
+# homepage	    : https://iwd.wiki.kernel.org/
+# depends	    : readline dbus
+
+name=iwd
+version=2.11
+release=1
+source="https://www.kernel.org/pub/linux/network/wireless/$name-$version.tar.xz
+	run.$name
+	rc.$name"
+
+build() {
+	cd $name-$version
+
+	./configure \
+		--prefix=/usr \
+		--libexecdir=/usr/sbin \
+		--localstatedir=/var \
+		--sysconfdir=/etc \
+		--disable-systemd-service
+
+	make
+	make DESTDIR=$PKG install
+
+	install -d -m 0700 $PKG/var/lib/iwd
+	install -d -m 0700 $PKG/etc/iwd
+
+	    _runit() {
+		# runit service
+		install -Dm755 $SRC/run.$name $PKG/etc/sv/$name/run
+		ln -s /run/runit/supervise.$name $PKG/etc/sv/$name/supervise
+		    }
+	    _sysv() {
+		# rc service
+		install -Dm755 $SRC/rc.$name $PKG/etc/rc.d/$name
+		    }
+	    zfr isinstalled runit && _runit || _sysv
+
+}

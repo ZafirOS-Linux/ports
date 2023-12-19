@@ -1,0 +1,14 @@
+# description	: C++ interface to GTK+ 3
+# depends	: atkmm pangomm gtk3
+
+name=gtkmm3
+version=3.24.8
+release=1
+source="https://ftp.gnome.org/pub/gnome/sources/gtkmm/${version%.*}/gtkmm-$version.tar.xz"
+
+build() {
+	venom-meson gtkmm-$version build
+	meson compile -C build
+	DESTDIR=$PKG meson install --no-rebuild -C build
+
+}

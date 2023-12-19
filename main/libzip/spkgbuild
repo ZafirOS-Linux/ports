@@ -1,0 +1,25 @@
+# description	: A C library for reading, creating, and modifying zip archives 
+# homepage	: https://libzip.org
+# depends	: cmake ninja zlib bzip2 openssl gnutls
+
+name=libzip
+version=1.10.1
+release=1
+source="https://libzip.org/download/${name}-${version}.tar.xz"
+
+build() {
+	cmake -S $name-$version -B build -G Ninja \
+	        -DCMAKE_INSTALL_PREFIX=/usr \
+	        -DCMAKE_INSTALL_LIBDIR=lib \
+		-DCMAKE_INSTALL_LIBEXECDIR=lib \
+		-DCMAKE_BUILD_TYPE=Release \
+		-DCMAKE_C_FLAGS_RELEASE="$CFLAGS" \
+		-DCMAKE_CXX_FLAGS_RELEASE="$CXXFLAGS" \
+		-Wno-dev 
+	cmake --build build
+	DESTDIR=$PKG cmake --install build
+
+	if [zfr isinstalled openjdk-bin] || [zfr isinstalled openjdk-17-bin]; then
+		rm -rf $PKG/usr/lib/libzip.so
+	fi
+}

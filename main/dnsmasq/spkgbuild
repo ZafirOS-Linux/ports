@@ -1,0 +1,31 @@
+# description	: Lightweight, easy to configure DNS forwarder and DHCP server
+# homepage	: http://www.thekelleys.org.uk/dnsmasq/doc.html
+# depends	: nettle
+
+name=dnsmasq
+version=2.89
+release=2
+backup="etc/dnsmasq.conf"
+source="http://www.thekelleys.org.uk/$name/$name-$version.tar.xz
+	run.$name
+	rc.$name"
+
+build() {
+	cd $name-$version
+	
+	make COPTS="-DHAVE_DNSSEC" CFLAGS="$CFLAGS -W -Wall"
+	make PREFIX=$PKG/usr install-common
+	install -Dm 644 dnsmasq.conf.example $PKG/etc/dnsmasq.conf
+	install -Dm 644 trust-anchors.conf $PKG/usr/share/dnsmasq/trust-anchors.conf
+
+	_runit() {
+	# runit service
+	    install -Dm755 $SRC/run.$name $PKG/etc/sv/$name/run
+	    ln -s /run/runit/supervise.$name $PKG/etc/sv/$name/supervise
+	}
+	_sysv() {
+	# rc service
+	    install -Dm755 $SRC/rc.$name $PKG/etc/rc.d/$name
+	}
+	zfr isinstalled runit && _runit || _sysv
+}

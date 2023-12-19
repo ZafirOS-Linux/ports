@@ -1,0 +1,16 @@
+# description	: Core utilities for Python packages
+# depends	: python3-six python3-pip
+
+name=python3-packaging
+_name=${name#*-}
+_n=${_name%${_name#?}}
+version=23.2
+release=1
+source="$name-$version.tar.gz::https://github.com/pypa/packaging/archive/refs/tags/$version.tar.gz"
+
+build() {
+	cd ${name#*-}-$version
+	/usr/bin/pip3 install --isolate --root=$PKG --ignore-installed --no-deps packaging
+	rm -rf $PKG/usr/lib/python*/site-packages/packaging-$version.dist.info/INSTALLER
+	rm -rf $PKG/usr/lib/python*/site-packages/packaging-$version.dist.info/REQUESTED
+}

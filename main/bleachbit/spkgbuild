@@ -1,0 +1,13 @@
+# description	: Deletes unneeded files to free disk space and maintain privacy
+# depends	: desktop-file-utils gtk3 hicolor-icon-theme python3-gobject3
+
+name=bleachbit
+version=4.6.0
+release=1
+source="https://github.com/bleachbit/bleachbit/archive/v$version/$name-$version.tar.gz"
+
+build() {
+	cd $name-$version
+	sed -i '/make -C po install/d' Makefile
+	make prefix=/usr DESTDIR="$PKG" install
+}

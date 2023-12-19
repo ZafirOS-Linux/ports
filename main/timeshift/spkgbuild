@@ -1,0 +1,23 @@
+# description	: A system restore utility for Linux
+# depends	: cronie libgee vte3 gtk3 vala json-glib rsync
+
+name=timeshift
+version=23.12.1
+release=1
+source="$name-$version.tar.gz::https://github.com/linuxmint/timeshift/archive/refs/tags/$version.tar.gz"
+
+build() {
+
+	cat > which <<EOF
+#!/bin/sh
+type -p \$1
+EOF
+
+chmod +x which
+export PATH=$PATH:$PWD
+
+	venom-meson $name-$version build \
+	-D xapp=false 
+	meson compile -C build
+	DESTDIR=$PKG meson install --no-rebuild -C build
+}

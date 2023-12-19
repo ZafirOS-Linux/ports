@@ -1,0 +1,16 @@
+# description	: Library to help create and query binary XML blobs
+# homepage	: https://github.com/hughsie/libxmlb
+# depends	: meson gobject-introspection
+
+name=libxmlb
+version=0.3.14
+release=1
+source="https://people.freedesktop.org/~hughsient/releases/$name-$version.tar.xz"
+
+build() {
+        venom-meson $name-$version build \
+		-D gtkdoc=false \
+		-D tests=false 
+        meson compile -C build
+        DESTDIR=$PKG meson install --no-rebuild -C build
+}

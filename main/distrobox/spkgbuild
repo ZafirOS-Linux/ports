@@ -1,0 +1,15 @@
+# description	    : Use any linux distribution inside your terminal
+# homepage	    : https://github.com/89luca89/distrobox
+# depends	    : docker
+# optionals	    : podman
+
+name=distrobox
+version=1.6.0.1
+release=1
+source="$name-$version.tar.gz::https://github.com/89luca89/$name/archive/$version.tar.gz"
+
+build() {
+	cd $name-$version
+	install -dm755  $PKG/usr
+	./install -P $PKG/usr
+}

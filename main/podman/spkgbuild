@@ -1,0 +1,20 @@
+# description	: Tool and library for running OCI-based containers in pods
+# homepage	: https://github.com/containers/libpod
+# depends	: go-md2man libseccomp libassuan libgpg-error gpgme
+
+name=podman
+version=4.8.2
+release=1
+source="https://github.com/containers/podman/archive/v$version/$name-$version.tar.gz"
+
+build() {
+	cd $name-$version
+	export GOCACHE=$PWD/gocache
+	export GOPATH=$PWD/gopath
+	make  BUILDTAGS="seccomp exclude_graphdriver_devicemapper exclude_graphdriver_btrfs"
+	make install PREFIX=/usr DESTDIR=$PKG
+
+	# not use in venom: usr/libexec usr/lib/systemd
+	rm -rf $PKG/usr/libexec
+	rm -rf $PKG/usr/lib/systemd
+}

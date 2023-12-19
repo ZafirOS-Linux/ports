@@ -1,0 +1,23 @@
+# description	:  Strawberry is a music player and music collection organizer.
+# homepage	: https://www.strawberrymusicplayer.org/
+# depends	: cmake boost protobuf qt6-base qt6-tools sqlite alsa-lib dbus gstreamer gnutls taglib fftw pulseaudio libcdio libmtp ninja
+
+name=strawberry
+version=1.0.21
+release=1
+source="https://files.strawberrymusicplayer.org/$name-$version.tar.xz"
+
+build() {
+	cmake -S $name-$version -B build -G Ninja \
+	        -DCMAKE_INSTALL_PREFIX=/usr \
+	        -DCMAKE_INSTALL_LIBDIR=lib \
+		-DCMAKE_INSTALL_LIBEXECDIR=lib \
+		-DCMAKE_BUILD_TYPE=Release \
+		-DCMAKE_C_FLAGS_RELEASE="$CFLAGS" \
+		-DCMAKE_CXX_FLAGS_RELEASE="$CXXFLAGS" \
+		-DBUILD_WITH_QT6=on \
+		-DENABLE_VLC=off \
+		-Wno-dev 
+	cmake --build build
+	DESTDIR=$PKG cmake --install build
+}

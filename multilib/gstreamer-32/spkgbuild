@@ -1,0 +1,24 @@
+# description	: Streaming media framework that enables applications to share a common set of plugins
+# depends	: gstreamer glib-32 libsoup3-32
+
+name=gstreamer-32
+version=1.22.7
+release=2
+source="http://gstreamer.freedesktop.org/src/gstreamer/gstreamer-$version.tar.xz"
+
+build() {
+	export CC="gcc -m32"
+	export CXX="g++ -m32"
+	export PKG_CONFIG_LIBDIR="/usr/lib32/pkgconfig"
+
+        venom-meson gstreamer-$version build \
+		--libdir=/usr/lib32 \
+		--libexecdir=/usr/lib32 \
+		-Dgst_debug=false \
+		-Dintrospection=disabled \
+		-Dpackage-name="GStreamer $version (Venom Linux)"
+	meson compile -C build
+	DESTDIR=$PWD/DESTDIR meson install --no-rebuild -C build
+	mkdir -p $PKG/usr/lib32
+	cp -Rv DESTDIR/usr/lib32/* $PKG/usr/lib32
+}

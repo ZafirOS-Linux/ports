@@ -1,0 +1,19 @@
+# description	: IRC chat program
+# depends	: dbus-glib gtk2 lua libcanberra libnotify python3-cffi
+
+name=hexchat
+version=2.16.1
+release=1
+source="https://dl.hexchat.net/$name/$name-$version.tar.xz"
+
+build() {
+	cd $name-$version
+
+	mkdir build
+	cd    build
+
+	meson --prefix=/usr -Dwith-lua=lua ..
+	ninja
+	DESTDIR=$PKG ninja install
+
+}

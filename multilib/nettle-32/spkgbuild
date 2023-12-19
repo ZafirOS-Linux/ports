@@ -1,0 +1,27 @@
+# description	: Low-level cryptographic library that is designed to fit easily in many contexts
+# depends	: nettle libgmp-32
+
+name=nettle-32
+version=3.9.1
+release=2
+source="https://ftp.gnu.org/gnu/nettle/nettle-$version.tar.gz"
+
+build() {
+	cd nettle-$version
+
+	export CC="gcc -m32"
+	export CXX="g++ -m32"
+	export PKG_CONFIG_LIBDIR="/usr/lib32/pkgconfig"
+
+	./configure --prefix=/usr \
+		    --libdir=/usr/lib32 \
+		    --disable-documentacion \
+                    --disable-openssl \
+                    --enable-shared \
+                    --enable-mini-gmp                  
+	make
+	make DESTDIR=$PWD/DESTDIR install
+
+	mkdir -p $PKG/usr/lib32
+	cp -Rv DESTDIR/usr/lib32/* $PKG/usr/lib32
+}

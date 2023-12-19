@@ -1,0 +1,22 @@
+# description	: System activated daemon that maps devices to color profiles
+# depends	: dbus glib lcms2 sqlite libgudev libgusb polkit gobject-introspection vala meson
+
+name=colord
+version=1.4.6
+release=1
+source="https://www.freedesktop.org/software/colord/releases/$name-$version.tar.xz"
+
+build() {
+	venom-meson $name-$version build \
+		--libexecdir=/usr/lib/$name \
+		-D daemon_user=colord \
+		-D vapi=true \
+		-D systemd=false \
+		-D libcolordcompat=true \
+		-D argyllcms_sensor=false \
+		-D bash_completion=false \
+		-D docs=false \
+		-D man=false 
+	meson compile -C build
+	DESTDIR=$PKG meson install --no-rebuild -C build
+}

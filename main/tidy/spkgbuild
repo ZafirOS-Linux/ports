@@ -1,0 +1,25 @@
+# description	: A tool to tidy down your HTML code to a clean style 
+# homepage	: https://www.html-tidy.org/
+# depends	: glibc cmake libxslt ninja
+
+name=tidy
+version=5.8.0
+release=1
+source="https://github.com/htacg/tidy-html5/archive/$version/$name-$version.tar.gz"
+
+build() {
+	cmake -S $name-html5-$version  -B build -G Ninja \
+	        -DCMAKE_INSTALL_PREFIX=/usr \
+	        -DCMAKE_INSTALL_LIBDIR=lib \
+		-DCMAKE_INSTALL_LIBEXECDIR=lib \
+		-DCMAKE_BUILD_TYPE=Release \
+		-DCMAKE_C_FLAGS_RELEASE="$CFLAGS" \
+		-DCMAKE_CXX_FLAGS_RELEASE="$CXXFLAGS" \
+		-Wno-dev 
+	cmake --build build
+	DESTDIR=$PKG cmake --install build
+
+# Compatibility symlinks until everything is ported
+  ln -s tidybuffio.h "$PKG"/usr/include/buffio.h
+  ln -s tidyplatform.h "$PKG"/usr/include/platform.h
+}

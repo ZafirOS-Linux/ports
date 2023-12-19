@@ -1,0 +1,32 @@
+# description	: C library that allows cryptography support to be added to a program
+# depends	: gnupg swig
+
+name=gpgme
+version=1.23.2
+release=1
+source="https://gnupg.org/ftp/gcrypt/gpgme/$name-$version.tar.bz2"
+
+build() {
+	cd $name-$version
+
+	export PYTHON=/usr/bin/python3
+
+	./configure \
+		--prefix=/usr \
+		--disable-fd-passing \
+		--disable-gpgsm-test \
+		--enable-languages='cl cpp python'
+
+	make
+	make DESTDIR=$PKG install
+
+	cd lang/python
+	make DESTDIR=$PKG install
+
+	install -d $PKG/etc/gpgme
+	echo 'c cl cpp' > $PKG/etc/gpgme/base
+	echo 'python3' > $PKG/etc/gpgme/python
+
+	rm -r $PKG/usr/share/info
+	rm -rf $PKG/usr/lib/python2.7
+}
